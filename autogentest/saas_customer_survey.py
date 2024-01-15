@@ -1,9 +1,11 @@
 from autogen import AssistantAgent, UserProxyAgent, config_list_from_json, GroupChat, GroupChatManager
+import openai
 
+openai.api_key = "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"
 config_list = config_list_from_json(env_or_file="OAI_CONFIG_LIST")
 
 llm_config = {
-    "config_list": config_list,
+    "api_key": openai.api_key,
     "seed": 53,
     "temperature": 0,
     "request_timeout": 300
@@ -52,11 +54,8 @@ critic = AssistantAgent(
 groupchat = GroupChat(agents=[user_proxy, engineer, planner, executor, critic], messages=[], max_round=50)
 manager = GroupChatManager(groupchat=groupchat, llm_config=llm_config)
 
-user_proxy.initiate_chat(manager, message="I would like to build a simple website that collects feedback from "
-                                          "consumers via forms.  We can just use a flask application that creates an "
-                                          "html website with forms and has a single question if they liked their "
-                                          "customer experience and then keeps that answer.  I need a thank you html "
-                                          "page once they completed the survey.  I then need a html page called "
-                                          "admin that gives a nice table layout of all of the records from the "
-                                          "database.  Just use sqlite3 as the database, keep it simple.  Also use "
-                                          "Bootstrap for the CSS Styling.")
+user_proxy.initiate_chat(manager, message='''Quiero que construyas una aplicacion en streamlit que le pida al usuario que ingrese un
+                         excel o csv , est  o lo usaras para crear un dataframe y tambien que sea parte del knowledge retrieval
+                         dado, dejaras la aplicacion lista para que el usuario le haga preguntas a open ai de este dataframe y 
+                         que el sistema le responda hallazgos matematicos sobre estos datos. Crearas codigo para que se genere un 
+                         agente con las herramientas de open ai para que pueda darle las respuestas al usuario sobre esos datos ''')
